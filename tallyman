@@ -77,6 +77,12 @@ umount $DEVICE_ROOTFS
 info "removing loop devices"
 kpartx -d $DEVICE_ROOTFS > /dev/null
 
+sleep 2
+
+# install bootloader
+info "installing bootloader from $KERNEL_TMP"
+dd conv=notrunc if=$KERNEL_TMP/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
+
 # exit
 info "completed!"
 exit 0

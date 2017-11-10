@@ -40,5 +40,3 @@ EOF
 $KERNEL_TMP/u-boot/tools/mkimage -C none -A arm64 -T script -d $ROOTFS/boot/boot.cmd $ROOTFS/boot/boot.scr
 
 
-dd conv=notrunc if=$KERNEL_TMP/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
-
