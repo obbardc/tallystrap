@@ -29,6 +29,11 @@ mkdir -p $BUILDENV
 info "creating blank image $IMAGE"
 dd if=/dev/zero of=$IMAGE bs=1MiB count=$ROOTSIZE >& /dev/null
 
+# install bootloader
+info "installing bootloader from $CWD/tmp_kernel"
+#dd conv=notrunc if=$KERNEL_TMP/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
+dd if=$CWD/tmp_kernel/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
+
 # create partition table
 # (sunxi needs first 2kb free for bootloader to be installed)
 # from 2048 to full card ext4
@@ -79,9 +84,6 @@ kpartx -d $IMAGE > /dev/null
 
 sleep 2
 
-# install bootloader
-info "installing bootloader from $KERNEL_TMP"
-dd conv=notrunc if=$KERNEL_TMP/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
 
 # exit
 info "completed!"

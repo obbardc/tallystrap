@@ -37,6 +37,6 @@ setenv bootdelay 100
 #booti 0x11000000 - 0x1000000
 EOF
 
-$KERNEL_TMP/u-boot/tools/mkimage -C none -A arm64 -T script -d $ROOTFS/boot/boot.cmd $ROOTFS/boot/boot.scr
+$KERNEL_TMP/u-boot/tools/mkimage -C none -A arm64 -T script -d $ROOTFS/boot/boot.cmd $ROOTFS/boot.scr
 
 
