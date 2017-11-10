@@ -61,6 +61,10 @@ cd $ROOTFS
 
 # do evil things to the rootfs here
 
+for SHELL_SCRIPT in scripts/*.sh; do
+    echo "Running $SHELL_SCRIPT"
+    . "$SHELL_SCRIPT"
+done
 
 
 # stop the doing evil things to the rootfs here
