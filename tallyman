@@ -22,9 +22,10 @@ fi
 
 # purge old build env
 rm -rf $BUILDENV
+mkdir -p $BUILDENV
 
 # create blank image $ROOTSIZE blocks long
-dd if=/dev/zero of=$IMAGE bs=1MB count=$ROOTSIZE
+dd if=/dev/zero of=$IMAGE bs=1MiB count=$ROOTSIZE
 echo "TALLYMAN: created blank image $IMAGE"
 
 # setup loopback
