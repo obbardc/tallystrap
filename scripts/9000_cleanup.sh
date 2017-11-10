@@ -1,6 +1,6 @@
 . ./functions.sh
 
-# show how much disk space used
-df -h
+# show used disk space
+df -h | grep $ROOTFS
 
 info "Completed system setup!"
