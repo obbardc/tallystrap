@@ -57,15 +57,14 @@ mkfs.ext4 $DEVICE_ROOTFS >& /dev/null
 echo "TALLYMAN: mounting rootfs"
 mkdir -p $ROOTFS
 mount $DEVICE_ROOTFS $ROOTFS
-cd $ROOTFS
 
 # do evil things to the rootfs here
 
+# loop over all of the scripts
 for SHELL_SCRIPT in scripts/*.sh; do
     echo "Running $SHELL_SCRIPT"
     . "$SHELL_SCRIPT"
 done
-
 
 # stop the doing evil things to the rootfs here
 
