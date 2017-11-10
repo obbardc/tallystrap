@@ -26,13 +26,13 @@ rm -rf $BUILDENV
 mkdir -p $BUILDENV
 
 # create blank image $ROOTSIZE blocks long
+echo "TALLYMAN: creating blank image $IMAGE"
 dd if=/dev/zero of=$IMAGE bs=1MiB count=$ROOTSIZE >& /dev/null
-echo "TALLYMAN: created blank image $IMAGE"
 
 # create partition table
 # (sunxi needs first 2kb free for bootloader to be installed)
 # from 2048 to full card ext4
-echo "TALLYMAN: partitioning"
+echo "TALLYMAN: creating filesystems"
 fdisk $IMAGE >& /dev/null << EOF
 n
 p
@@ -43,17 +43,20 @@ w
 EOF
 
 # create device map
+echo "TALLYMAN: creating loop device"
 DEVICE=`kpartx -a -v $IMAGE | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
 sleep 1
-DEVICE="/dev/mapper/${DEVICE}p0"
-echo "TALLYMAN: made loop device $DEVICE"
+DEVICE_ROOTFS="/dev/mapper/${DEVICE}p1"
+echo "TALLYMAN: created loop device $DEVICE"
 
 # format
-mkfs.ext4 $DEVICE > /dev/null
+echo "TALLYMAN: formatting rootfs"
+mkfs.ext4 $DEVICE_ROOTFS > /dev/null
 
 # mount
+echo "TALLYMAN: mounting rootfs"
 mkdir -p $ROOTFS
-mount $DEVICE $ROOTFS
+mount $DEVICE_ROOTFS $ROOTFS
 cd $ROOTFS
 
 # do evil things to the rootfs here
@@ -63,11 +66,12 @@ cd $ROOTFS
 # stop the doing evil things to the rootfs here
 
 # unmount
-umount $DEVICE
+echo "TALLYMAN: unmounting rootfs"
+umount $DEVICE_ROOTFS
 
 # remove the device maps
-kpartx -d $DEVICE > /dev/null
-echo "TALLYMAN: removed loop device"
+echo "TALLYMAN: removing loop devices"
+kpartx -d $DEVICE_ROOTFS > /dev/null
 
 # exit
 echo "TALLYMAN: completed!"
