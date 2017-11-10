@@ -27,8 +27,8 @@ echo "booting..."
 
 setenv bootargs "console=tty0 console=tty1 console=ttyS0,115200 hdmi.audio=EDID:0 disp.screen0_output_mode=1280x720p60 root=/dev/mmcblk0p1 rootwait panic=10"
 
-ext4load mmc 0:1 0x11000000 Image
-ext4load mmc 0:1 0x1000000 sun50i-h5-orangepi-pc2.dtb
+ext4load mmc 0:1 0x11000000 boot/Image
+ext4load mmc 0:1 0x1000000 boot/sun50i-h5-orangepi-pc2.dtb
 fdt addr 0x1000000
 
 booti 0x11000000 - 0x1000000
