@@ -53,8 +53,8 @@ cd u-boot
 git checkout v2017.09  # latest stable version
 
 make clean
-CROSS_COMPILE=aarch64-linux-gnu- make orangepi_pc2_defconfig
-CROSS_COMPILE=aarch64-linux-gnu- make
+CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 make orangepi_pc2_defconfig
+CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 make
 
 # join the files together
 cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl.bin
