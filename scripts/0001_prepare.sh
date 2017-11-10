@@ -1,4 +1,4 @@
 . ./functions.sh
 
-echo_info "Preparing to setup system"
+info "Preparing to setup system"
 
