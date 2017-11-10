@@ -9,8 +9,8 @@
 
 
 
-
-BUILDENV="`pwd`/tmp"
+CWD=`pwd`
+BUILDENV="$CWD/tmp"
 ROOTSIZE="1500"
 IMAGE="$BUILDENV/out.img"
 ROOTFS="$BUILDENV/rootfs"
@@ -51,7 +51,7 @@ echo "TALLYMAN: created loop device $DEVICE"
 
 # format
 echo "TALLYMAN: formatting rootfs"
-mkfs.ext4 $DEVICE_ROOTFS > /dev/null
+mkfs.ext4 $DEVICE_ROOTFS >& /dev/null
 
 # mount
 echo "TALLYMAN: mounting rootfs"
@@ -67,6 +67,7 @@ cd $ROOTFS
 
 # unmount
 echo "TALLYMAN: unmounting rootfs"
+cd $CWD
 umount $DEVICE_ROOTFS
 
 # remove the device maps
