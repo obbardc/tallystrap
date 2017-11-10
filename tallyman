@@ -10,7 +10,7 @@
 . ./functions.sh
 
 CWD=`pwd`
-BUILDENV="$CWD/tmp"
+BUILDENV="$CWD/tmp_img"
 ROOTSIZE="1500"
 IMAGE="$BUILDENV/out.img"
 ROOTFS="$BUILDENV/rootfs"

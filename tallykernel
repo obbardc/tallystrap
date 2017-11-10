@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+#
+# build kernel, u-boot etc for orange pi
+
+
+CWD=`pwd`
+BUILDENV="$CWD/tmp_kernel"
+
+# purge old build env
+rm -rf $BUILDENV
+mkdir -p $BUILDENV
+cd $BUILDENV
+
+
+
+# download kernel
+#git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git --depth=1
+#git clone git://github.com/linux-sunxi/linux-sunxi.git -b sunxi-next --depth=1
+git clone git://github.com/megous/linux.git -b orange-pi-4.14 --depth=1
+cd linux
+
+# build arm64 kernel
+
+# configure
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make clean defconfig
+#make menuconfig
+
+# make
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image dtbs modules
+
+# install modules to temp location
+mkdir compiled_modules
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=compiled_modules make modules_install
+cd $BUILDENV
+
+
+
+# build arm trusted firmware
+git clone git://github.com/apritzel/arm-trusted-firmware.git -b allwinner --depth=1
+cd arm-trusted-firmware
+CROSS_COMPILE=aarch64-linux-gnu- make PLAT=sun50iw1p1 DEBUG=1 bl31
+export BL31=$BUILDENV/arm-trusted-firmware/build/sun50iw1p1/debug/bl31.bin
+cd $BUILDENV
+
+
+
+# build u-boot (stable)
+git clone git://git.denx.de/u-boot.git -b master
+cd u-boot
+git checkout v2017.09  # latest stable version
+
+make clean
+CROSS_COMPILE=aarch64-linux-gnu- make orangepi_pc2_defconfig
+CROSS_COMPILE=aarch64-linux-gnu- make
+
+# join the files together
+cat spl/sunxi-spl.bin u-boot.itb > u-boot-sunxi-with-spl.bin
+
+
+# go back to main page
+cd $CWD
