@@ -12,7 +12,8 @@
 
 BUILDENV="`pwd`/tmp"
 ROOTSIZE="1500"
-IMAGE="$PWD/out.img"
+IMAGE="$BUILDENV/out.img"
+ROOTFS="$BUILDENV/rootfs"
 
 # check root is running
 if [ $EUID -ne 0 ]; then
@@ -25,7 +26,7 @@ rm -rf $BUILDENV
 mkdir -p $BUILDENV
 
 # create blank image $ROOTSIZE blocks long
-dd if=/dev/zero of=$IMAGE bs=1MiB count=$ROOTSIZE
+dd if=/dev/zero of=$IMAGE bs=1MiB count=$ROOTSIZE > /dev/null
 echo "TALLYMAN: created blank image $IMAGE"
 
 # setup loopback
@@ -33,34 +34,40 @@ DEVICE=`losetup --find --show $IMAGE`
 echo "TALLYMAN: loopback mounted $DEVICE"
 
 # create partition table
-echo "TALLYMAN: Setting up MBR/Partitions"
-fdisk $DEVICE &>/dev/null << EOF
+# (sunxi needs first 2kb free for bootloader to be installed)
+# from 2048 to full card ext4
+echo "TALLYMAN: partitioning"
+sudo fdisk out.img << EOF
 n
 p
 1
-
-+64M
-t
-c
-n
-p
-2
-
+2048
 
 w
 EOF
 
 
-#DEVICE_PARTS=`kpartx -av $image | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
-
-
-# create device maps
-DEVICE_PARTS=`kpartx -av $IMAGE`
-echo $DEVICE_PARTS
+# create device map
+DEVICE_PART=`kpartx -av $IMAGE | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
 sleep 1
+DEVICE_PART="/dev/mapper/${DEVICE_PART}p0"
+
+# format
+mkfs.ext4 $DEVICE_PART
+
+# mount
+mkdir -p $ROOTFS
+mount $DEVICE_PART $ROOTFS
+cd $ROOTFS
+
+# do evil things to the rootfs here
 
 
 
+# stop the doing evil things to the rootfs here
+
+# unmount
+umount $DEVICE_PART
 
 # remove the device maps
 kpartx -d $IMAGE
