@@ -42,21 +42,18 @@ p
 w
 EOF
 
-# setup loopback
-DEVICE=`losetup --find --show $IMAGE`
-echo "TALLYMAN: loopback mounted $DEVICE"
-
 # create device map
-DEVICE_PART=`kpartx -av $DEVICE | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
+DEVICE=`kpartx -a -v $IMAGE | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
 sleep 1
-DEVICE_PART="/dev/mapper/${DEVICE_PART}p0"
+DEVICE="/dev/mapper/${DEVICE}p0"
+echo "TALLYMAN: made loop device $DEVICE"
 
 # format
-mkfs.ext4 $DEVICE_PART > /dev/null
+mkfs.ext4 $DEVICE > /dev/null
 
 # mount
 mkdir -p $ROOTFS
-mount $DEVICE_PART $ROOTFS
+mount $DEVICE $ROOTFS
 cd $ROOTFS
 
 # do evil things to the rootfs here
@@ -66,14 +63,11 @@ cd $ROOTFS
 # stop the doing evil things to the rootfs here
 
 # unmount
-umount $DEVICE_PART
+umount $DEVICE
 
 # remove the device maps
 kpartx -d $DEVICE > /dev/null
-
-# detach the loopback
-losetup --detach $DEVICE_PART > /dev/null
-echo "TALLYMAN: detatched loopback device"
+echo "TALLYMAN: removed loop device"
 
 # exit
 echo "TALLYMAN: completed!"
