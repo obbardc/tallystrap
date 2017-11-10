@@ -75,7 +75,7 @@ umount $DEVICE_ROOTFS
 
 # remove the device maps
 info "removing loop devices"
-kpartx -d $DEVICE_ROOTFS > /dev/null
+kpartx -d $IMAGE > /dev/null
 
 sleep 2
 
