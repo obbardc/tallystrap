@@ -37,7 +37,7 @@ echo "TALLYMAN: loopback mounted $DEVICE"
 # (sunxi needs first 2kb free for bootloader to be installed)
 # from 2048 to full card ext4
 echo "TALLYMAN: partitioning"
-sudo fdisk out.img << EOF
+fdisk out.img &> /dev/null << EOF
 n
 p
 1
@@ -53,7 +53,7 @@ sleep 1
 DEVICE_PART="/dev/mapper/${DEVICE_PART}p0"
 
 # format
-mkfs.ext4 $DEVICE_PART
+mkfs.ext4 $DEVICE_PART > /dev/null
 
 # mount
 mkdir -p $ROOTFS
@@ -70,10 +70,10 @@ cd $ROOTFS
 umount $DEVICE_PART
 
 # remove the device maps
-kpartx -d $IMAGE
+kpartx -d $IMAGE > /dev/null
 
 # detach the loopback
-losetup --detach $IMAGE
+losetup --detach $DEVICE_PART > /dev/null
 echo "TALLYMAN: detatched loopback device"
 
 # exit
