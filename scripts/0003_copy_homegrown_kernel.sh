@@ -18,9 +18,7 @@ cp $KERNEL_TMP/linux/compiled_modules/* rootfs/ -R
 
 # copy boot script
 
-# copy this into rootfs/boot/boot.cmd
-
-cat <<'EOF' >> $ROOTFS/boot.cmd
+cat <<'EOF' >> $ROOTFS/boot/boot.cmd
 echo "This is your bootloader speaking."
 echo "---------------"
 echo "All your sunxi are belong to us."
@@ -40,4 +38,4 @@ $KERNEL_TMP/u-boot/tools/mkimage -C none -A arm64 -T script -d $ROOTFS/boot/boot
 
 
 dd if=$KERNEL_TMP/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
-sync
+
