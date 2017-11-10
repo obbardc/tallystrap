@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#
+# This script will tally up all of your various fruits.
+#
+# It does not work or do anything interesting. Yet.
+#
+#
+# https://www.youtube.com/watch?v=6Tou8-Cz8is
+
+
+
+
+BUILDENV="`pwd`/tmp"
+ROOTSIZE="1500"
+IMAGE="$PWD/out.img"
+
+# check root is running
+if [ $EUID -ne 0 ]; then
+    echo "you must run as root"
+    exit 1
+fi
+
+# purge old build env
+rm -rf $BUILDENV
+
+# create blank image $ROOTSIZE blocks long
+dd if=/dev/zero of=$IMAGE bs=1MB count=$ROOTSIZE
+echo "TALLYMAN: created blank image $IMAGE"
+
+# setup loopback
+DEVICE=`losetup --find --show $IMAGE`
+echo "TALLYMAN: loopback mounted $DEVICE"
+
+# create partition table
+echo "TALLYMAN: Setting up MBR/Partitions"
+fdisk $DEVICE &>/dev/null << EOF
+n
+p
+1
+
++64M
+t
+c
+n
+p
+2
+
+
+w
+EOF
+
+
+#DEVICE_PARTS=`kpartx -av $image | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
+
+
+# create device maps
+DEVICE_PARTS=`kpartx -av $IMAGE`
+echo $DEVICE_PARTS
+sleep 1
+
+
+
+
+# remove the device maps
+kpartx -d $IMAGE
+
+# detach the loopback
+losetup --detach $IMAGE
+echo "TALLYMAN: detatched loopback device"
+
+# exit
+echo "TALLYMAN: completed!"
+exit 0
