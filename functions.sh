@@ -1,5 +1,9 @@
-echo_info() {
+info() {
     echo "TALLYMAN: $*"
+}
+
+error() {
+    echo "TALLYMAN ERROR: $*"
 }
 
 chroot_exec() {
