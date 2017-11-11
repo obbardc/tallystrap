@@ -17,9 +17,9 @@ cd $BUILDENV
 
 
 # download kernel
-#git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git --depth=1
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git --depth=1
 #git clone git://github.com/linux-sunxi/linux-sunxi.git -b sunxi-next --depth=1
-git clone git://github.com/megous/linux.git -b orange-pi-4.14 --depth=1
+#git clone git://github.com/megous/linux.git -b orange-pi-4.14 --depth=1
 cd linux
 
 # build arm64 kernel
