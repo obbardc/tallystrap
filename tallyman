@@ -11,7 +11,7 @@
 
 CWD=`pwd`
 BUILDENV="$CWD/tmp_img"
-ROOTSIZE="80"
+ROOTSIZE="500"
 IMAGE="$BUILDENV/out.img"
 ROOTFS="$BUILDENV/rootfs"
 
