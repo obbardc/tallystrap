@@ -7,12 +7,12 @@ echo "tallystrap-test" > $ROOTFS/etc/hostname
 chroot_exec echo "root:toor" | chpasswd
 
 # setup apt
-echo "deb http://ftp.uk.debian.org/debian buster main
-deb-src http://ftp.uk.debian.org/debian buster main" > $ROOTFS/etc/apt/sources.list
+#echo "deb http://ftp.uk.debian.org/debian buster main
+#deb-src http://ftp.uk.debian.org/debian buster main" > $ROOTFS/etc/apt/sources.list
 
 # update repo
-chroot_exec apt-get update
+#chroot_exec apt-get update
 
 # install ssh server
-chroot_exec apt-get install openssh-server --yes --force-yes
+#chroot_exec apt-get install openssh-server --yes --force-yes
 
