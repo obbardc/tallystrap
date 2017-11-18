@@ -26,7 +26,8 @@ echo "---------------"
 echo "booting..."
 
 setenv load_addr "0x44000000"
-setenv bootargs "console=ttyS0,115200 console=tty0 disp.screen0_output_mode=1280x720p60 root=/dev/mmcblk0p1 panic=10"
+#setenv bootargs "console=ttyS0,115200 console=tty0 disp.screen0_output_mode=1280x720p60 root=/dev/mmcblk0p1 panic=10"
+setenv bootargs "console=ttyS0,115200 noinitrd root=/dev/mmcblk0p1 rootfstype=ext4 rw rootdelay=5"
 
 load mmc 0:1 ${load_addr} boot/Image
 load mmc 0:1 ${fdt_addr_r} boot/sun50i-h5-orangepi-pc2.dtb
