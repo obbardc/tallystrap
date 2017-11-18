@@ -17,9 +17,9 @@ cd $BUILDENV
 
 
 # download kernel
-#git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git --depth=1
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git --depth=1
 #git clone git://github.com/linux-sunxi/linux-sunxi.git -b sunxi-next --depth=1
-git clone git://github.com/megous/linux.git -b orange-pi-4.14 --depth=1
+#git clone git://github.com/megous/linux.git -b orange-pi-4.14 --depth=1
 cd linux
 
 # build arm64 kernel
@@ -55,11 +55,16 @@ cd $BUILDENV
 # build u-boot (stable)
 git clone git://git.denx.de/u-boot.git -b master
 cd u-boot
-#git checkout v2017.09  # latest stable version
+git checkout v2017.09  # latest stable version
 
-wget https://github.com/megous/linux/raw/orange-pi-4.11/0001-sunxi-h3-Fix-PLL1-setup-to-never-use-dividers.patch
-git am 0001-sunxi-h3-Fix-PLL1-setup-to-never-use-dividers.patch
+#wget https://github.com/megous/linux/raw/orange-pi-4.11/0001-sunxi-h3-Fix-PLL1-setup-to-never-use-dividers.patch
+#git am 0001-sunxi-h3-Fix-PLL1-setup-to-never-use-dividers.patch
 
+wget https://raw.githubusercontent.com/armbian/build/master/patch/u-boot/u-boot-sunxi/lower-default-cpufreq-H5.patch
+git apply lower-default-cpufreq-H5.patch
+
+wget https://raw.githubusercontent.com/armbian/build/master/patch/u-boot/u-boot-sunxi/lower-default-DRAM-freq-A64-H5.patch
+git apply lower-default-DRAM-freq-A64-H5.patch
 
 make clean
 CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm make orangepi_pc2_defconfig
