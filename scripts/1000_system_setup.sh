@@ -1,10 +1,12 @@
 . ./functions.sh
 
 # set hostname
-echo "tallystrap-test" > $ROOTFS/etc/hostname
+echo "orangepi" > $ROOTFS/etc/hostname
 
 # set root password
-chroot_exec echo "root:toor" | chpasswd
+PASSWORD="toor"
+ENCRYPTED_PASSWORD=`mkpasswd -m sha-512 "${PASSWORD}"`
+chroot_exec usermod -p "${ENCRYPTED_PASSWORD}" root
 
 # setup apt
 #echo "deb http://ftp.uk.debian.org/debian buster main
