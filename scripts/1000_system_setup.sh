@@ -8,6 +8,9 @@ PASSWORD="toor"
 ENCRYPTED_PASSWORD=`mkpasswd -m sha-512 "${PASSWORD}"`
 chroot_exec usermod -p "${ENCRYPTED_PASSWORD}" root
 
+# mount root filesystem
+echo "/dev/mmcblk0p1	/	ext4	defaults,noatime	0	1" > $ROOTFS/etc/fstab
+
 # setup apt
 #echo "deb http://ftp.uk.debian.org/debian buster main
 #deb-src http://ftp.uk.debian.org/debian buster main" > $ROOTFS/etc/apt/sources.list
