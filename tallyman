@@ -73,6 +73,8 @@ mkfs.ext4 $DEVICE_ROOTFS >& /dev/null
 info "mounting rootfs"
 mkdir -p $ROOTFS
 mount $DEVICE_ROOTFS $ROOTFS
+
+mkdir -p ${ROOTFS}/boot
 mount $DEVICE_BOOTFS ${ROOTFS}/boot
 
 # do evil things to the rootfs here

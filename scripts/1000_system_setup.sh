@@ -9,7 +9,8 @@ ENCRYPTED_PASSWORD=`mkpasswd -m sha-512 "${PASSWORD}"`
 chroot_exec usermod -p "${ENCRYPTED_PASSWORD}" root
 
 # mount root filesystem
-echo "/dev/mmcblk0p1	/	ext4	defaults,noatime	0	1" > $ROOTFS/etc/fstab
+echo "/dev/mmcblk0p1	/boot	vfat	defaults	0	0
+/dev/mmcblk0p2	/	ext4	defaults,noatime	0	1" > $ROOTFS/etc/fstab
 
 # setup wired network (dhcp)
 echo "
