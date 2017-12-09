@@ -40,7 +40,7 @@ dd conv=notrunc if=$CWD/tmp_kernel/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs
 #  next ${BOOTSIZE} mb FAT32,
 #  rest of disk rootfs
 info "creating filesystems"
-fdisk $device &>/dev/null << EOF
+fdisk $IMAGE &>/dev/null << EOF
 n
 p
 1
