@@ -20,7 +20,7 @@ iface lo inet loopback
 
 # The primary network interface
 allow-hotplug eth0
-iface eth0 inet dhcp" >> $ROOTFS/etc/interfaces
+iface eth0 inet dhcp" >> $ROOTFS/etc/network/interfaces
 
 # setup apt
 echo "deb http://ftp.uk.debian.org/debian buster main
