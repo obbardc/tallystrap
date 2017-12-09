@@ -12,6 +12,7 @@
 CWD=`pwd`
 BUILDENV="$CWD/tmp_img"
 ROOTSIZE="500"
+BOOTSIZE="64"
 IMAGE="$BUILDENV/out.img"
 ROOTFS="$BUILDENV/rootfs"
 
@@ -34,14 +35,23 @@ info "installing bootloader from $CWD/tmp_kernel"
 dd conv=notrunc if=$CWD/tmp_kernel/u-boot/u-boot-sunxi-with-spl.bin of=$IMAGE bs=8k seek=1
 
 # create partition table
-# (sunxi needs first 2kb free for bootloader to be installed)
-# from 2048 to full card ext4
+#
+#  first 2kb bootloader & partition table,
+#  next ${BOOTSIZE} mb FAT32,
+#  rest of disk rootfs
 info "creating filesystems"
-fdisk $IMAGE >& /dev/null << EOF
+fdisk $device &>/dev/null << EOF
 n
 p
 1
 2048
++${BOOTSIZE}M
+t
+c
+n
+p
+2
+
 
 w
 EOF
@@ -50,17 +60,20 @@ EOF
 info "creating loop device"
 DEVICE=`kpartx -a -v $IMAGE | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
 sleep 1
-DEVICE_ROOTFS="/dev/mapper/${DEVICE}p1"
+DEVICE_BOOTFS="/dev/mapper/${DEVICE}p1"
+DEVICE_ROOTFS="/dev/mapper/${DEVICE}p2"
 info "created loop device $DEVICE"
 
 # format
-info "formatting rootfs"
+info "formatting filesystems"
+mkfs.vfat $DEVICE_BOOTFS >& /dev/null
 mkfs.ext4 $DEVICE_ROOTFS >& /dev/null
 
 # mount
 info "mounting rootfs"
 mkdir -p $ROOTFS
 mount $DEVICE_ROOTFS $ROOTFS
+mount $DEVICE_BOOTFS ${ROOTFS}/boot
 
 # do evil things to the rootfs here
 
@@ -75,6 +88,7 @@ done
 # unmount
 info "unmounting rootfs"
 cd $CWD
+umount $DEVICE_BOOTFS
 umount $DEVICE_ROOTFS
 
 # remove the device maps
