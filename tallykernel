@@ -32,16 +32,12 @@ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make clean defconfig
 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make menuconfig
 
 # make
-ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image dtbs
+ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make -j6 Image dtbs modules
 
 # install modules to temp location
 mkdir compiled_modules
 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- INSTALL_MOD_PATH=compiled_modules make modules_install
 
-# install firmware to temp location
-mkdir -p compiled_modules/lib/firmware
-ARCH=arm64 make firmware_install INSTALL_FW_PATH=compiled_modules/lib/firmware
-#sudo make headers_install INSTALL_HDR_PATH=/usr
 cd $BUILDENV
 
 

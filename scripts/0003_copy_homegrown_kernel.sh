@@ -13,7 +13,7 @@ cp $KERNEL_TMP/linux/arch/arm64/boot/Image $ROOTFS/boot/
 cp $KERNEL_TMP/linux/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dtb $ROOTFS/boot/
 
 # copy kernel modues
-cp $KERNEL_TMP/linux/compiled_modules/* rootfs/ -R
+cp $KERNEL_TMP/linux/compiled_modules/* ${ROOTFS}/ -R
 
 # copy boot script
 
