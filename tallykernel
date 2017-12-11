@@ -28,6 +28,7 @@ cd linux
 # build arm64 kernel
 
 # configure
+rm -rf compiled_modules/*
 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make clean defconfig
 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make menuconfig
 
