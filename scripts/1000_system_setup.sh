@@ -35,3 +35,6 @@ chroot_exec apt-get update
 
 # install ssh server
 chroot_exec apt-get install openssh-server --yes
+
+# allow root logins (this is temporary, do not worry)
+sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
